@@ -29,10 +29,13 @@ class UserController extends Controller
         // $user = UserModel::all(); //ambil semua data dari tabel m_user
         // return view('user', ['data' => $user]);
 
-        //praktikum 2
-        $user = UserModel::findOr(20, ['username', 'nama'], function () {
-            abort(404);
-        });
+        //praktikum 2.1
+        // $user = UserModel::findOr(20, ['username', 'nama'], function () {
+        //     abort(404);
+        // });
+
+        //praktikum 2.2
+        $user = UserModel::where('username', 'manager9')->firstOrFail();
         return view('user', ['data' => $user]);
     }
 }
