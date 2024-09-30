@@ -3,7 +3,8 @@ namespace App\Http\Controllers;
 
 class WelcomeController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $breadcrumb = (object) [
             'title' => 'Selamat Datang',
             'list' => ['Home', 'Welcome']
@@ -14,3 +15,4 @@ class WelcomeController extends Controller
         return view('welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu]);
     }
 }
+?>
