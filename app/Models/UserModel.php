@@ -10,15 +10,18 @@ class UserModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'm_user'; //mendefinisikan nama tabel yg digunakan oleh model ini
-    protected $primaryKey = 'user_id'; //mendefinisikan primary key dari tabel yang digunakan
+    // Mendefinisikan nama tabel yang digunakan oleh model ini
+    protected $table = 'm_user';
 
+    // Mendefinisikan primary key dari tabel
+    protected $primaryKey = 'user_id';
+
+    // Kolom yang bisa diisi massal
     protected $fillable = ['level_id', 'username', 'nama', 'password'];
 
-    //ubah
-    // protected $fillable = ['level_id', 'username', 'nama'];
-
-    public function level() : BelongsTo {
+    // Relasi ke model LevelModel
+    public function level(): BelongsTo
+    {
         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
     }
 }

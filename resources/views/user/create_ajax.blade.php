@@ -14,7 +14,7 @@
                     <select name="level_id" id="level_id" class="form-control" required>
                         <option value="">- Pilih Level -</option>
                         @foreach($level as $l)
-                        <option value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
+                            <option value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
                         @endforeach
                     </select>
                     <small id="error-level_id" class="error-text form-text text-danger"></small>
@@ -58,7 +58,7 @@
                     type: form.method,
                     data: $(form).serialize(),
                     success: function(response) {
-                        if(response.status) {
+                        if (response.status) {
                             $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
