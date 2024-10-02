@@ -5,33 +5,33 @@
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+            <button onclick="modalAction('{{url('barang/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
     <div class="card-body">
         @if(session('success'))
             <div class="alert alert-success">{{session('success')}}</div>
-            @endif
-            @if (session('error'))
+        @endif
+        @if (session('error'))
             <div class="alert alert-danger">{{session('error')}}</div>
-            @endif
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Filter:</label>
-                        <div class="col-3">
-                            <select class="form-control" id="kategori_id" name="kategori_id" required>
-                                <option value="">- Semua -</option>
-                                @foreach($kategori as $item)
-                                    <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
-                                @endforeach
-                            </select>
-                            <small class="form-text text-muted">Kategori Barang</small>
-                        </div>
+        @endif
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Filter:</label>
+                    <div class="col-3">
+                        <select class="form-control" id="kategori_id" name="kategori_id" required>
+                            <option value="">- Semua -</option>
+                            @foreach($kategori as $item)
+                                <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted">Kategori Barang</small>
                     </div>
                 </div>
             </div>
-            
+        </div>
+        
         <table class="table table-bordered table-striped table-hover table-sm" id="table_barang">
             <thead>
                 <tr>
@@ -47,6 +47,7 @@
         </table>
     </div>
 </div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -54,9 +55,16 @@
 
 @push('js')
 <script>
+    function modalAction(url = '') {
+        $('#myModal').load(url,function() {
+            $('#myModal').modal('show');
+        });
+    }
+
+    var dataBarang;
+
     $(document).ready(function() {
-        var dataUser = $('#table_barang').DataTable({
-            // serverSide: true, jika ingin menggunakan server side processing
+        dataBarang = $('#table_barang').DataTable({
             serverSide: true,
             ajax: {
                 "url": "{{ url('barang/list') }}",
@@ -65,7 +73,6 @@
 
                 "data": function(d) {
                     d.kategori_id = $('#kategori_id').val();
-                    console.log(d.kategori_id); 
                 }
             },
             columns: [
@@ -76,7 +83,7 @@
                     searchable: true
                 },
                 {
-                    data: "kategori.kategori_nama", //mengambil kolom foreign key dari tabel kategori
+                    data: "kategori.kategori_nama", // relasi kategori
                     className: "",
                     orderable: true,
                     searchable: true
@@ -115,7 +122,7 @@
         });
 
         $('#kategori_id').on('change',function() {
-            dataUser.ajax.reload();
+            dataBarang.ajax.reload();
         })
 
     });
