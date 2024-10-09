@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\UserModel;
 
 class AuthController extends Controller
 {
@@ -59,4 +61,38 @@ class AuthController extends Controller
         // Redirect ke halaman login
         return redirect('login');
     }
+
+    /**
+     * Menampilkan halaman register.
+     */
+    public function registerForm()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Menangani proses registrasi user.
+     */
+    public function register(Request $request)
+    {
+        // Validasi input dari form
+        $validatedData = $request->validate([
+            'username' => 'required|string|max:255|unique:m_user', // pastikan username unik
+            'name' => 'required|string|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'level_id' => 'required|integer'
+        ]);
+
+        // Simpan data user ke database
+        $user = new UserModel();
+        $user->username = $validatedData['username'];
+        $user->nama = $validatedData['name'];
+        $user->password = Hash::make($validatedData['password']);
+        $user->level_id = $validatedData['level_id'];
+        $user->save();
+
+        // Redirect ke halaman login setelah registrasi
+        return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');
+    }
+
 }
