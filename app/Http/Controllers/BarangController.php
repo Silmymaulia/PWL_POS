@@ -166,14 +166,21 @@ class BarangController extends Controller
        }
    }
 
-    public function create_ajax()
-    {
-        // Mengambil data kategori untuk digunakan dalam form create barang
-        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
-    
-        // Mengembalikan view untuk menampilkan form create barang dengan data kategori
-        return view('barang.create_ajax')->with('kategori', $kategori);
-    }
+   public function create_ajax()
+   {
+       // Mengambil data kategori untuk digunakan dalam form create barang
+       $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
+   
+       // Membuat breadcrumb untuk tampilan yang lebih terstruktur
+       $breadcrumb = (object) [
+           'title' => 'Tambah Barang (AJAX)',
+           'list' => ['Home', 'Barang', 'Tambah']
+       ];
+   
+       // Mengembalikan view untuk menampilkan form create barang dengan data kategori
+       return view('barang.create_ajax', compact('kategori', 'breadcrumb'));
+   }
+   
     
 
     public function store_ajax(Request $request) {
