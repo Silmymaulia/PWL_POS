@@ -112,6 +112,14 @@ class BarangController extends Controller
        return view('barang.show', ['breadcrumb' => $breadcrumb, 'page' => $page,'barang' => $barang, 'activeMenu' => $activeMenu]);
    }
 
+   public function show_ajax(string $id)
+    {
+        // Ambil barang berdasarkan ID dan sertakan relasi dengan KategoriModel (atau model lain jika ada)
+        $barang = BarangModel::find($id);
+        // Kirimkan data barang ke view
+        return view('barang.show_ajax', ['barang' => $barang]);
+    }
+
    public function edit(string $id) {
        $barang = BarangModel::find($id);
        $kategori = KategoriModel::all();

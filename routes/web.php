@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/level/create_ajax', [LevelController::class, 'create_ajax']);
         Route::post('/level/store_ajax', [LevelController::class, 'store_ajax']);
         Route::get('/level/{id}', [LevelController::class, 'show']);
+        Route::get('/level/{id}/show_ajax', [LevelController::class, 'show_ajax']);
         Route::get('/level/{id}/edit', [LevelController::class, 'edit']);
         Route::put('/level/{id}', [LevelController::class, 'update']);
         Route::get('/level/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
@@ -88,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kategori/create_ajax', [KategoriController::class, 'create_ajax']);
         Route::post('/kategori/store_ajax', [KategoriController::class, 'store_ajax']);
         Route::get('/kategori/{id}', [KategoriController::class, 'show']);
+        Route::get('/kategori/{id}/show_ajax', [KategoriController::class, 'show_ajax']);
         Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit']);
         Route::put('/kategori/{id}', [KategoriController::class, 'update']);
         Route::get('/kategori/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
@@ -106,6 +108,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/supplier/create_ajax', [SupplierController::class, 'create_ajax']);
         Route::post('/supplier/store_ajax', [SupplierController::class, 'store_ajax']);
         Route::get('/supplier/{id}', [SupplierController::class, 'show']);
+        Route::get('/supplier/{id}/show_ajax', [SupplierController::class, 'show_ajax']);
         Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit']);
         Route::put('/supplier/{id}', [SupplierController::class, 'update']);
         Route::get('/supplier/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']);
@@ -124,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/create_ajax', [BarangController::class, 'create_ajax']);
         Route::post('/barang/store_ajax', [BarangController::class, 'store_ajax']);
         Route::get('/barang/{id}', [BarangController::class, 'show']);
+        Route::get('/barang/{id}/show_ajax', [BarangController::class, 'show_ajax']);
         Route::get('/barang/{id}/edit', [BarangController::class, 'edit']);
         Route::put('/barang/{id}', [BarangController::class, 'update']);
         Route::get('/barang/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);

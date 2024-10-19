@@ -30,7 +30,7 @@ class LevelController extends Controller
         return DataTables::of($levels)
             ->addIndexColumn()
             ->addColumn('aksi', function ($level) {
-                $btn = '<a href="'.url('/level/' . $level->level_id).'" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<button onclick="modalAction(\''.url('/level/' . $level->level_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\''.url('/level/' . $level->level_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\''.url('/level/' . $level->level_id . '/delete_ajax').'\')" class="btn btn-danger btn-sm">Hapus</button>';
                 return $btn;
@@ -196,6 +196,23 @@ class LevelController extends Controller
 
     // Kembalikan view konfirmasi penghapusan level
     return view('level.confirm_ajax', ['level' => $level]);
+}
+
+public function show_ajax(string $id)
+{
+    // Ambil data level berdasarkan ID
+    $level = LevelModel::find($id);
+
+    // Jika data level tidak ditemukan, kirimkan respon error
+    if (!$level) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Level tidak ditemukan.'
+        ]);
+    }
+
+    // Kembalikan view konfirmasi penghapusan level
+    return view('level.show_ajax', ['level' => $level]);
 }
 
 }
