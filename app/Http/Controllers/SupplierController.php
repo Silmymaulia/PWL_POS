@@ -166,6 +166,23 @@ class SupplierController extends Controller
     return view('supplier.confirm_ajax', ['supplier' => $supplier]);
 }
 
+public function show_ajax(string $id)
+{
+    // Ambil data supplier berdasarkan ID
+    $supplier = SupplierModel::find($id);
+
+    // Jika data supplier tidak ditemukan, kirimkan respon error
+    if (!$supplier) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Supplier tidak ditemukan.'
+        ]);
+    }
+
+    // Kembalikan view konfirmasi penghapusan supplier
+    return view('supplier.show_ajax', ['supplier' => $supplier]);
+}
+
 public function delete_ajax(Request $request, $id)
 {
     // Pastikan request berasal dari AJAX

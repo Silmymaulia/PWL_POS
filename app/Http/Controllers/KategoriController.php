@@ -138,42 +138,53 @@ public function store_ajax(Request $request) {
         return view('kategori.edit_ajax', ['kategori' => $kategori]);
     }
 
-    public function update_ajax(Request $request, $id) {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'kategori_kode' => 'required|string|max:20|unique:m_kategori,kategori_kode,' . $id . ',kategori_id',
-                'kategori_nama' => 'required|string|max:100',
-            ];
+    public function update_ajax(Request $request, $id)
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        // Aturan validasi
+        $rules = [
+            'kategori_kode' => 'required|string|max:20|unique:m_kategori,kategori_kode,' . $id . ',kategori_id',
+            'kategori_nama' => 'required|string|max:100',
+        ];
 
-            // Validasi input
-            $validator = Validator::make($request->all(), $rules);
+        // Lakukan validasi
+        $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi gagal.',
-                    'msgField' => $validator->errors(),
-                ]);
-            }
-
-            $kategori = KategoriModel::find($id);
-
-            if ($kategori) {
-                $kategori->update($request->all());
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diupdate',
-                ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Data tidak ditemukan',
-                ]);
-            }
+        // Cek apakah validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal!',
+                'msgField' => $validator->errors()
+            ]);
         }
 
-        return redirect('/');
+        // Cari data kategori berdasarkan ID
+        $kategori = KategoriModel::find($id);
+
+        if (!$kategori) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data kategori tidak ditemukan'
+            ]);
+        }
+
+        // Update data kategori
+        $kategori->kategori_kode = $request->kategori_kode;
+        $kategori->kategori_nama = $request->kategori_nama;
+        $kategori->save();
+
+        // Kembalikan response sukses
+        return response()->json([
+            'status' => true,
+            'message' => 'Data kategori berhasil diupdate!'
+        ]);
     }
+
+    // Jika request bukan AJAX
+    return redirect('/');
+}
+
 
     public function confirm_ajax(string $id)
     {

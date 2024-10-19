@@ -1,4 +1,4 @@
-<form action="{{ url('/kategori/ajax') }}" method="POST" id="form-tambah-kategori">
+<form action="{{ url('/kategori/store_ajax') }}" method="POST" id="form-tambah-kategori">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -11,17 +11,17 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Kode Kategori</label>
-                    <input value="" type="text" name="kategori_kode" id="kategori_kode" class="form-control" required>
+                    <input type="text" name="kategori_kode" id="kategori_kode" class="form-control" required>
                     <small id="error-kategori_kode" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Nama Kategori</label>
-                    <input value="" type="text" name="kategori_nama" id="kategori_nama" class="form-control" required>
+                    <input type="text" name="kategori_nama" id="kategori_nama" class="form-control" required>
                     <small id="error-kategori_nama" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
         </div>
@@ -29,13 +29,13 @@
 </form>
 
 <script>
-    $(document).ready(function() {
-        $("#form-tambah-kategori").validate({
-            rules: {
-                kategori_kode: { required: true, minlength: 3, maxlength: 10 },
-                kategori_nama: { required: true, minlength: 3, maxlength: 100 }
-            },
-            submitHandler: function(form) {
+$(document).ready(function() {
+    $("#form-tambah-kategori").validate({
+        rules: {
+            kategori_kode: { required: true, minlength: 3, maxlength: 10 },
+            kategori_nama: { required: true, minlength: 3, maxlength: 100 }
+        },
+        submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -48,7 +48,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataKategori.ajax.reload();
+                            dataUser.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

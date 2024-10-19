@@ -232,20 +232,24 @@ class BarangController extends Controller
         return redirect('/');
     }
     
-    public function edit_ajax_barang(string $id)
+    public function edit_ajax(string $id)
     {
-        $barang = BarangModel::find($id);
-        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get(); // Jika barang memiliki kategori
-
+        $barang = BarangModel::with('kategori')->find($id);  // Eager loading kategori
+     
         if (!$barang) {
             return response()->json(['status' => false, 'message' => 'Data barang tidak ditemukan']);
         }
-
+    
+        // Mendapatkan kategori list
+        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
+    
         return view('barang.edit_ajax', ['barang' => $barang, 'kategori' => $kategori]);
     }
-
+    
     public function update_ajax(Request $request, $id) {
+        // Pastikan bahwa ini adalah request AJAX
         if ($request->ajax() || $request->wantsJson()) {
+            // Definisikan aturan validasi
             $rules = [
                 'kategori_id' => 'required|integer',
                 'barang_kode' => 'required|string|min:3|unique:m_barang,barang_kode,' . $id . ',barang_id',
@@ -254,8 +258,10 @@ class BarangController extends Controller
                 'harga_jual' => 'required|numeric',
             ];
     
+            // Jalankan validasi
             $validator = Validator::make($request->all(), $rules);
     
+            // Jika validasi gagal, kembalikan pesan error
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -264,23 +270,31 @@ class BarangController extends Controller
                 ]);
             }
     
-            $check = BarangModel::find($id);
-            if ($check) {
-                $check->update($request->all());
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data barang berhasil diupdate'
-                ]);
-            } else {
+            // Temukan barang berdasarkan ID
+            $barang = BarangModel::find($id);
+    
+            // Jika barang tidak ditemukan, kembalikan pesan error
+            if (!$barang) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Data barang tidak ditemukan'
                 ]);
             }
+    
+            // Lakukan update data barang
+            $barang->update($request->all());
+    
+            // Kembalikan respons sukses
+            return response()->json([
+                'status' => true,
+                'message' => 'Data barang berhasil diupdate'
+            ]);
         }
     
+        // Jika bukan request AJAX, redirect ke halaman utama atau halaman lain
         return redirect('/');
-    }    
+    }
+          
 
     public function confirm_ajax(string $id)
     {

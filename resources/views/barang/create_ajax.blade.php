@@ -1,4 +1,4 @@
-<form action="{{ url('/barang/ajax') }}" method="POST" id="form-tambah-barang">
+<form action="{{ url('/barang/store_ajax') }}" method="POST" id="form-tambah-barang">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -71,7 +71,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataBarang.ajax.reload();
+                            dataUser.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {
