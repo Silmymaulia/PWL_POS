@@ -84,16 +84,15 @@
         "dataType": "json",
         "type": "POST",
         "data": function(d) {
-          d.filter_kategori = $('.filter_kategori').val();
+          d.kategori_id = $('.kategori_id').val();
         }
       },
       columns: [
         {
-          data: "No_Urut",
-          className: "text-center",
-          width: "5%",
-          orderable: false,
-          searchable: false
+          data: "barang_id",
+          className: "",
+          orderable: true,
+          searchable: true
         },
         {
           data: "barang_kode",
