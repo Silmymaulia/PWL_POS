@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StokController;
+use App\Http\Controllers\PenjualanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -168,4 +169,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/stok/export_pdf', [StokController::class, 'export_pdf']);
     });    
 
+    // Route untuk Stok Barang
+    Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
+        Route::get('/penjualan', [PenjualanController::class, 'index']);
+        Route::post('/penjualan/list', [PenjualanController::class, 'list']);
+        Route::get('/penjualan/create_ajax', [PenjualanController::class, 'create_ajax']);
+        Route::post('/penjualan/store_ajax', [PenjualanController::class, 'store_ajax']);
+        Route::get('/penjualan/{id}/show_ajax', [PenjualanController::class, 'show_ajax']);
+        Route::get('/penjualan/{id}/edit_ajax', [PenjualanController::class, 'edit_ajax']);
+        Route::put('/penjualan/{id}/update_ajax', [PenjualanController::class, 'update_ajax']);
+        Route::get('/penjualan/{id}/delete_ajax', [PenjualanController::class, 'confirm_ajax']);
+        Route::delete('/penjualan/{id}/delete_ajax', [PenjualanController::class, 'delete_ajax']);
+        Route::post('/penjualan/import_ajax', [PenjualanController::class, 'import_ajax']);
+        Route::get('/penjualan/export_excel', [PenjualanController::class, 'export_excel']);
+        Route::get('/penjualan/export_pdf', [PenjualanController::class, 'export_pdf']);
+    }); 
 });
