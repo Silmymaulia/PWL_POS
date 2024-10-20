@@ -23,30 +23,31 @@
       </div>
       <div class="card-body">
         <p class="login-box-msg">Register untuk akun baru</p>
-        <form action="{{ url('register') }}" method="POST" id="form-register">
-            @csrf
-            <div class="input-group mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
-            </div>
-            <div class="input-group mb-3">
-                <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required>
-            </div>
-            <div class="input-group mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
-            </div>
-            <div class="input-group mb-3">
-                <input type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi Password" required>
-            </div>
-            <div class="input-group mb-3">
-                <select name="level_id" class="form-control" required>
-                    <option value="1">Admin</option>
-                    <option value="2">Manager</option>
-                    <option value="3">Staff</option>
-                    <option value="4">Customer</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Daftar</button>
-        </form>        
+        <form action="{{ route('register') }}" method="POST" id="form-register">
+          @csrf
+          <div class="input-group mb-3">
+              <input type="text" name="username" class="form-control" placeholder="Username" required>
+          </div>
+          <div class="input-group mb-3">
+              <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required>
+          </div>
+          <div class="input-group mb-3">
+              <input type="password" name="password" class="form-control" placeholder="Password (min. 6 karakter)" required>
+          </div>
+          <div class="input-group mb-3">
+              <input type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi Password" required>
+          </div>
+          <div class="input-group mb-3">
+              <select name="level_id" class="form-control" required>
+                  <option value="1">Admin</option>
+                  <option value="2">Manager</option>
+                  <option value="3">Staff</option>
+                  <option value="4">Customer</option>
+              </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+      </form>
+                
       </div>
     </div>
   </div>

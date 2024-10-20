@@ -12,15 +12,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('m_user', function (Blueprint $table) {
-            $table->string('photo')->nullable(); // Menambahkan kolom 'photo' di tabel m_user
+            $table->string('avatar')->nullable()->after('username'); // Kolom avatar ditambahkan setelah username
         });
     }
 
     public function down()
     {
         Schema::table('m_user', function (Blueprint $table) {
-            $table->dropColumn('photo'); // Menghapus kolom 'photo' jika rollback
+            $table->dropColumn('avatar');
         });
     }
-
 };

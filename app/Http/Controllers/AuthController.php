@@ -75,24 +75,30 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // Validasi input dari form
-        $validatedData = $request->validate([
-            'username' => 'required|string|max:255|unique:m_user', // pastikan username unik
-            'name' => 'required|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
-            'level_id' => 'required|integer'
-        ]);
-
-        // Simpan data user ke database
-        $user = new UserModel();
-        $user->username = $validatedData['username'];
-        $user->nama = $validatedData['name'];
-        $user->password = Hash::make($validatedData['password']);
-        $user->level_id = $validatedData['level_id'];
-        $user->save();
-
-        // Redirect ke halaman login setelah registrasi
-        return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');
+        try {
+            // Validasi input dari form
+            $validatedData = $request->validate([
+                'username' => 'required|string|max:20|unique:m_user',
+                'name' => 'required|string|max:100',
+                'password' => 'required|string|min:6|confirmed',
+                'level_id' => 'required|integer'
+            ]);
+    
+            // Simpan data user ke database
+            $user = new UserModel();
+            $user->username = $validatedData['username'];
+            $user->nama = $validatedData['name'];
+            $user->password = Hash::make($validatedData['password']);
+            $user->level_id = $validatedData['level_id'];
+            $user->save();
+    
+            // Redirect ke halaman login setelah registrasi
+            return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');
+        } catch (\Exception $e) {
+            \Log::error('Registration error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Registrasi gagal. Silakan coba lagi.']);
+        }
     }
-
+    
+       
 }

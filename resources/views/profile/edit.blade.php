@@ -14,36 +14,48 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group mb-3">
-                            <label for="nama">Nama</label>
-                            <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" required>
-                            @error('nama')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <!-- Field untuk nama -->
+                        <div>
+                            <label for="nama">Nama:</label>
+                            <input type="text" name="nama" id="nama" value="{{ $user->nama }}" required>
+                        </div>
+
+                        <!-- Field untuk username -->
+                        <div>
+                            <label for="username">Username:</label>
+                            <input type="text" name="username" id="username" value="{{ $user->username }}" required>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username', $user->username) }}" required readonly>
-                            @error('username')
+                            <label for="avatar">Foto Profil</label>
+                            <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar" name="avatar" accept="image/*">
+                            @error('avatar')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="photo">Foto Profil</label>
-                            <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo" accept="image/*">
-                            @error('photo')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        
+                            <!-- Menampilkan foto profil saat ini jika ada -->
+                            @if ($user->avatar)
+                                <div class="mt-3">
+                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="Foto Profil" class="img-thumbnail" width="150">
+                                    <p>Foto Profil Saat Ini</p>
+                                </div>
+                            @else
+                                <p class="mt-3">Tidak ada foto profil saat ini.</p>
+                            @endif
+                        </div>              
 
                         <button type="submit" class="btn btn-primary">Update Profil</button>
-                        <a href="{{ route('profile.update') }}" class="btn btn-secondary">Kembali</a>
+                        <a href="{{ route('profile.profil') }}" class="btn btn-secondary">Kembali</a>
                     </form>
                 </div>
             </div>

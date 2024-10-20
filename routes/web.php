@@ -33,12 +33,22 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 
 // Rute yang memerlukan autentikasi
 Route::middleware(['auth'])->group(function () {
-
-    // Rute untuk menampilkan profil pengguna
-    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.show');
+    // Rute untuk menampilkan profil
+    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.profil');
+    
+    // Rute untuk mengedit profil
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::match(['post', 'put'], '/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
+    
+    // Rute untuk memperbarui data profil
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Rute untuk menampilkan halaman ganti password
+    Route::get('/profile/password/change', [ProfileController::class, 'changePassword'])->name('password.change');
+    
+    // Rute untuk memperbarui password
+    Route::put('/profile/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+    
+    
     // Route untuk halaman home
     Route::get('/', [WelcomeController::class, 'index']);
 

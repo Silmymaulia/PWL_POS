@@ -15,7 +15,7 @@ class UserModel extends Authenticatable
     protected $primaryKey = 'user_id';
     
     // Tambahkan 'photo' dalam fillable agar bisa disimpan ke database
-    protected $fillable = ['username', 'password', 'nama', 'level_id', 'created_at', 'updated_at', 'photo'];
+    protected $fillable = ['username', 'password', 'nama', 'level_id', 'created_at', 'updated_at', 'avatar'];
 
     protected $hidden = ['password']; // Jangan ditampilkan saat select
 

@@ -1,37 +1,31 @@
 @extends('layouts.template')
 
-@section('title', 'Upload Foto Profil')
-
 @section('content')
-<div class="container-fluid mt-5">
-    <h2 class="text-center mb-4">Upload Foto Profil</h2>
-
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <form action="{{ route('profile.update.photo') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="photo" class="font-weight-bold">Unggah Foto:</label>
-                            <input type="file" name="photo" required accept="image/*" class="form-control-file border">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Unggah Foto</button>
-                    </form>
+            <!-- Menampilkan foto profil dan detail pengguna -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Profil Pengguna</h3>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Menampilkan foto profil -->
+                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default_photo.jpg') }}" 
+                         alt="Foto Profil" 
+                         class="img-fluid rounded-circle mb-3" 
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    
+                    <!-- Detail pengguna -->
+                    <h3 style="font-size: 24px; font-weight: bold;">{{ $user->nama }}</h3>
+                    <p class="card-text">Username: {{ $user->username }}</p>
+                    <p class="card-text">Password: ********</p>
 
-                    @if(session('success'))
-                        <div class="alert alert-success mt-3">{{ session('success') }}</div>
-                    @endif
+                    <!-- Tombol untuk edit profil -->
+                    <a href="{{ route('profile.edit') }}" class="btn btn-primary">Edit Profil</a>
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger mt-3">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                    <!-- Tombol untuk ganti password -->
+                    <a href="{{ route('password.change') }}" class="btn btn-warning">Ganti Password</a>
                 </div>
             </div>
         </div>
