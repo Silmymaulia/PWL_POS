@@ -14,7 +14,7 @@
                     <select name="supplier_id" id="supplier_id" class="form-control" required>
                         <option value="">- Pilih Supplier -</option>
                         @foreach($supplier as $sup)  <!-- Pastikan ini benar -->
-                            <option value="{{ $sup->supplier_id }}">{{ $sup->supplier_nama }}</option>
+                            <option value="{{ $sup->supplier_id }}">{{ $sup->supplier_name }}</option>
                         @endforeach
                     </select>
                     <small id="error-supplier_id" class="error-text form-text text-danger"></small>
@@ -85,13 +85,15 @@
                         }
                     },
                     error: function(xhr) {
-                        // Tangani kesalahan AJAX
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: 'Gagal menghubungi server. Silakan coba lagi.'
-                        });
-                    }
+    console.log("Status: " + xhr.status); // Tampilkan status kode
+    console.log("Response: " + xhr.responseText); // Tampilkan respons
+    Swal.fire({
+        icon: 'error',
+        title: 'Terjadi Kesalahan',
+        text: 'Gagal menghubungi server. Silakan coba lagi.'
+    });
+}
+    
                 });
                 return false; // Mencegah pengiriman form default
             },

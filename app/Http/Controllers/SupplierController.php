@@ -207,4 +207,106 @@ public function delete_ajax(Request $request, $id)
     return redirect('/');
 }
 
+public function import(){
+    return view('supplier.import');
+}
+
+public function import_ajax(Request $request) {
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'file_supplier' => ['required', 'mimes:xlsx', 'max:1024']
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ]);
+        }
+        $file = $request->file('file_supplier');
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+        $data = $sheet->toArray(null, false, true, true);
+        $insert = [];
+        if (count($data) > 1) {
+            foreach ($data as $baris => $value) {
+                if ($baris > 1) {
+                    $insert[] = [
+                        'supplier_name' => $value['A'],
+                        'created_at' => now(),
+                    ];
+                }
+            }
+            if (count($insert) > 0) {
+                SupplierModel::insertOrIgnore($insert);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diimport'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak ada data yang diimport'
+            ]);
+        }
+    }
+    return redirect('/');
+}
+
+public function export_excel() {
+    $supplier = SupplierModel::all();
+
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setCellValue('A1', 'No');
+    $sheet->setCellValue('B1', 'Nama Supplier');
+    $sheet->getStyle('A1:B1')->getFont()->setBold(true);
+
+    $no = 1;
+    $baris = 2;
+
+    foreach ($supplier as $value) {
+        $sheet->setCellValue('A' . $baris, $no);
+        $sheet->setCellValue('B' . $baris, $value->supplier_name);
+        $baris++;
+        $no++;
+    }
+
+    foreach (range('A', 'B') as $columnID) {
+        $sheet->getColumnDimension($columnID)->setAutoSize(true);
+    }
+
+    $sheet->setTitle('Data Supplier');
+
+    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+    $filename = 'Data_Supplier_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+    header('Cache-Control: max-age=1');
+    header('Expires: Mon, 25 Jul 1997 05:00:00 GMT');
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+    header('Cache-Control: cache, must-revalidate');
+    header('Pragma: public');
+
+    $writer->save('php://output');
+    exit;
+}
+
+public function export_pdf() {
+    $supplier = SupplierModel::all();
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('supplier.export_pdf', ['supplier' => $supplier]);
+    $pdf->setPaper('a4', 'portrait');
+    $pdf->setOption('isRemoteEnabled', true);
+    $pdf->render();
+
+    return $pdf->stream('Data Supplier' . date('Y-m-d H:i:s') . '.pdf');
+}
+
 }

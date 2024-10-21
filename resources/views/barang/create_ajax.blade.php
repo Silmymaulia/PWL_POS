@@ -21,23 +21,29 @@
                 </div>
                 <div class="form-group">
                     <label>Kode Barang</label>
-                    <input value="" type="text" name="barang_kode" id="barang_kode" class="form-control" required>
+                    <input type="text" name="barang_kode" id="barang_kode" class="form-control" required>
                     <small id="error-barang_kode" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Nama Barang</label>
-                    <input value="" type="text" name="barang_nama" id="barang_nama" class="form-control" required>
+                    <input type="text" name="barang_nama" id="barang_nama" class="form-control" required>
                     <small id="error-barang_nama" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Harga Beli</label>
-                    <input value="" type="number" name="harga_beli" id="harga_beli" class="form-control" required>
+                    <input type="number" name="harga_beli" id="harga_beli" class="form-control" required>
                     <small id="error-harga_beli" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Harga Jual</label>
-                    <input value="" type="number" name="harga_jual" id="harga_jual" class="form-control" required>
+                    <input type="number" name="harga_jual" id="harga_jual" class="form-control" required>
                     <small id="error-harga_jual" class="error-text form-text text-danger"></small>
+                </div>
+                <!-- Tambahkan field Stok Barang -->
+                <div class="form-group">
+                    <label>Jumlah Stok</label>
+                    <input type="number" name="stok" id="stok" class="form-control" required>
+                    <small id="error-stok" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -56,7 +62,8 @@
                 barang_kode: { required: true, minlength: 3, maxlength: 10 },
                 barang_nama: { required: true, minlength: 3, maxlength: 100 },
                 harga_beli: { required: true, number: true, min: 1 },
-                harga_jual: { required: true, number: true, min: 1 }
+                harga_jual: { required: true, number: true, min: 1 },
+                stok: { required: true, number: true, min: 0 } // Validasi stok barang
             },
             submitHandler: function(form) {
                 $.ajax({
@@ -71,7 +78,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataUser.ajax.reload();
+                            dataUser.ajax.reload(); // Reload data setelah sukses
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

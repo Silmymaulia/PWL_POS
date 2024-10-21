@@ -69,10 +69,10 @@ class StokController extends Controller
     {
         // Aturan validasi
         $rules = [
-            'supplier_id' => 'required|exists:m_supplier,supplier_id',
+            'supplier_id' => 'required|exists:suppliers,supplier_id',
             'barang_id' => 'required|exists:m_barang,barang_id',
             'stok_tanggal' => 'required|date',
-            'stok_jumlah' => 'required|numeric|min:1',
+            'stok_jumlah' => 'required|integer|min:1',
         ];
     
         // Validasi input
@@ -215,6 +215,11 @@ class StokController extends Controller
         return view('stok.show_ajax', compact('stok', 'page'));
     }
 
+    public function import()
+    {
+        return view('stok.import'); // Menampilkan form import
+    }
+
     public function import_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
@@ -340,6 +345,4 @@ class StokController extends Controller
     
         return $pdf->stream('Data Stok ' . date('Y-m-d H:i:s') . '.pdf');
     }
-    
-
 }

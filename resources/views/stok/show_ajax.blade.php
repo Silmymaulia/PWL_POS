@@ -33,7 +33,7 @@
                 </tr>
                 <tr>
                     <th class="text-right col-3">Supplier:</th>
-                    <td class="col-9">{{ $stok->supplier->supplier_nama }}</td> <!-- Pastikan relasi supplier ada -->
+                    <td class="col-9">{{ $stok->supplier->supplier_name }}</td> <!-- Pastikan relasi supplier ada -->
                 </tr>
                 <tr>
                     <th class="text-right col-3">Barang:</th>
