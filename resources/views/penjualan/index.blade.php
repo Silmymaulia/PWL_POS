@@ -5,8 +5,10 @@
 <div class="container">
 
     <div class="card-tools mb-3">
-          <a href="{{ url('/penjualan/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export penjualan XLSX</a>
-          <a href="{{ url('/penjualan/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export penjualan PDF</a>
+        <button onclick="modalAction('{{ url('/penjualan/import') }}')" class="btn btn-info"><i class="fa fa-file-import"></i> Import Penjualan</button>
+        <a href="{{ url('/penjualan/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Penjualan XLSX</a>
+        <a href="{{ url('/penjualan/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Penjualan PDF</a>
+        <button onclick="modalAction('{{ url('/penjualan/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Data</button>
     </div>
 
     {{-- Ringkasan total penjualan --}}

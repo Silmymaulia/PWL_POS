@@ -59,7 +59,7 @@
     <table class="border-bottom-header">
         <tr>
             <td width="15%" class="text-center">
-                <img src="{{ public_path('polinema-bw.png') }}" width="150" height="110">
+                <img src="{{ public_path('polinema-bw.png') }}" width="120" height="110">
             </td>
             <td width="85%">
                 <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
@@ -71,28 +71,26 @@
         </tr>
     </table>
     
-    <h3 class="text-center">LAPORAN DATA PENJUALAN</h3>
+    <h3 class="text-center">LAPORAN DATA PENGGUNA</h3>
     
     <table class="border-all">
         <thead>
             <tr>
                 <th class="text-center">No</th>
-                <th>ID Penjualan</th>
-                <th>Kode Penjualan</th>
-                <th>Nama Pembeli</th>
-                <th>Tanggal Penjualan</th>
                 <th>User ID</th>
+                <th>Level</th>
+                <th>Username</th>
+                <th>Nama</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($penjualan as $data)
+            @foreach($users as $data)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $data->penjualan_id }}</td>
-                    <td>{{ $data->penjualan_kode }}</td>
-                    <td>{{ $data->pembeli->nama }}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->penjualan_tanggal)->format('d-m-Y') }}</td>
                     <td>{{ $data->user_id }}</td>
+                    <td>{{ $data->level->level_nama }}</td>
+                    <td>{{ $data->username }}</td>
+                    <td>{{ $data->nama }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -1,14 +1,21 @@
-<form action="{{ url('/penjualan/store_ajax') }}" method="POST" id="form-tambah-penjualan">
+<form action="{{ url('/penjualan/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Penjualan</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Penjualan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label>User</label>
+                    <input type="text" class="form-control" value="{{ auth()->user()->nama }}" readonly>
+                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                    <small id="error-user_id" class="error-text form-text text-danger"></small>
+                </div>
+                
                 <div class="form-group">
                     <label>Pembeli</label>
                     <input type="text" name="pembeli" id="pembeli" class="form-control" required>
@@ -20,20 +27,40 @@
                     <small id="error-penjualan_kode" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
+                    <label>Items Dibeli</label>
+                    <div id="items-container">
+                        <div class="row item-row">
+                            <div class="col-md-4">
+                                <label>Nama Barang</label>
+                                <select name="items[0][barang_id]" class="form-control check-harga" required>
+                                    <option value="">- Pilih Barang -</option>
+                                    @foreach($barang as $item)
+                                        <option data-harga="{{$item->harga_jual}}" value="{{ $item->barang_id }}">{{ $item->barang_nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Jumlah</label>
+                                <input type="number" name="items[0][jumlah]" class="form-control jumlah-barang" required min="1">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Harga</label>
+                                <input type="number" name="items[0][harga]" class="form-control harga" required min="0" step="0.01">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger remove-item">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success" id="add-item">Tambah Barang</button>
+                    <small class="form-text text-muted">Tambah barang yang dibeli oleh pembeli</small>
+                </div>
+                <div class="form-group">
                     <label>Tanggal Penjualan</label>
-                    <input type="date" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control" required>
+                    <input type="datetime-local" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control" required>
                     <small id="error-penjualan_tanggal" class="error-text form-text text-danger"></small>
                 </div>
-                <div class="form-group">
-                    <label>Jumlah</label>
-                    <input type="number" name="jumlah" id="jumlah" class="form-control" required min="1">
-                    <small id="error-jumlah" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group">
-                    <label>Total Harga</label>
-                    <input type="number" name="total_harga" id="total_harga" class="form-control" required min="0">
-                    <small id="error-total_harga" class="error-text form-text text-danger"></small>
-                </div>
+                
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -44,64 +71,116 @@
 </form>
 
 <script>
-$(document).ready(function() {
-    $("#form-tambah-penjualan").validate({
-        rules: {
-            pembeli: { required: true },
-            penjualan_kode: { required: true },
-            penjualan_tanggal: { required: true, date: true },
-            jumlah: { required: true, number: true, min: 1 },
-            total_harga: { required: true, number: true, min: 0 }
-        },
-        submitHandler: function(form) {
-            // Kirim data dengan AJAX
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    if (response.status) {
-                        $('#myModal').modal('hide'); // Tutup modal
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
-                        });
-                        dataPenjualan.ajax.reload();  // Reload data penjualan pada DataTables
-                    } else {
-                        $('.error-text').text(''); // Reset error
-                        $.each(response.msgField, function(prefix, val) {
-                            $('#error-' + prefix).text(val[0]); // Tampilkan error
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    // Tangani kesalahan AJAX
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Terjadi Kesalahan',
-                        text: 'Gagal menghubungi server. Silakan coba lagi.'
-                    });
-                }
+    $(document).ready(function() {
+        function updateHarga() {
+            $('.check-harga').on('change', function() {
+                let selectedHarga = $('option:selected', this).data('harga');
+                $(this).closest('.item-row').find('.harga').val(selectedHarga);
             });
-            return false; // Mencegah pengiriman form default
-        },
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function(element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
         }
+        updateHarga();
+        
+        let itemIndex = 1; 
+        let validator = $("#form-tambah").validate({
+            rules: {
+                pembeli: { required: true },
+                penjualan_kode: { required: true, minlength: 3 },
+                penjualan_tanggal: { required: true },
+                user_id: { required: true, number: true },
+                "items[][jumlah]": { required: true, number: true, min: 1 },
+                "items[][harga]": { required: true, number: true, min: 0 }
+            },
+            messages: {
+                "items[][jumlah]": {
+                    required: "Jumlah barang harus diisi",
+                    number: "Jumlah harus berupa angka",
+                    min: "Jumlah minimal 1"
+                },
+                "items[][harga]": {
+                    required: "Harga harus diisi",
+                    number: "Harga harus berupa angka",
+                    min: "Harga minimal 0"
+                }
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    success: function(response) {
+                        if (response.status) {
+                            $('#myModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                            dataPenjualan.ajax.reload(); 
+                        } else {
+                            $('.error-text').text('');
+                            $.each(response.msgField, function(prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+                return false; 
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+        // Adding new item row
+        $('#add-item').on('click', function() {
+            const newItemRow = `
+                <div class="row item-row">
+                    <div class="col-md-4">
+                        <label>Nama Barang</label>
+                        <select name="items[${itemIndex}][barang_id]" class="form-control check-harga" required>
+                            <option value="">- Pilih Barang -</option>
+                            @foreach($barang as $item)
+                                <option data-harga="{{$item->harga_jual}}" value="{{ $item->barang_id }}">{{ $item->barang_nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Jumlah</label>
+                        <input type="number" name="items[${itemIndex}][jumlah]" class="form-control" required min="1">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Harga</label>
+                        <input type="number" name="items[${itemIndex}][harga]" class="form-control" required min="0" step="0.01">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger remove-item">Hapus</button>
+                    </div>
+                </div>
+            `;
+            $('#items-container').append(newItemRow);
+            itemIndex++; // Increment item index
+
+            // Update remove button event
+            $('.remove-item').off('click').on('click', function() {
+                $(this).closest('.item-row').remove();
+            });
+        });
+
+        $(document).on('click', '.remove-item', function() {
+            $(this).closest('.item-row').remove();
+        });
     });
-});
 </script>

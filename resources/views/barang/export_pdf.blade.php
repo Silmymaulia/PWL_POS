@@ -59,7 +59,7 @@
     <table class="border-bottom-header">
         <tr>
             <td width="15%" class="text-center">
-                <img src="{{ asset('polinema-bw.png') }}" alt="Logo Polinema">
+                <img src="{{ public_path('polinema-bw.png') }}" width="120" height="110">
             </td>
             <td width="85%">
                 <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
