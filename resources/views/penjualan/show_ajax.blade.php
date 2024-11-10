@@ -47,7 +47,33 @@
                 <div class="form-group">
                     <label>Barang yang dibeli:</label>
                     <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                                <th>Harga</th>
+                                <th>Total Harga</th>
+                            </tr>
+                        </thead>
                         <tbody>
+                            @php $totalPrice = 0; @endphp
+                            @foreach($penjualan->penjualan_detail as $item)
+                                <tr>
+                                    <td>{{ $item->barang->barang_nama }}</td>
+                                    <td>{{ $item->jumlah }}</td>
+                                    <td>{{ number_format($item->harga, 0, ',', '.') }}</td>
+                                    <td>{{ number_format($item->jumlah * $item->harga, 0, ',', '.') }}</td>
+                                </tr>
+                                @php $totalPrice += $item->jumlah * $item->harga; @endphp
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-right">Total Harga</th>
+                                <th>{{ number_format($totalPrice, 0, ',', '.') }}</th>
+                            </tr>
+                        </tfoot>
+                        {{-- <tbody>
                             <tr>
                                 <th class="text-right">Kode Penjualan:</th>
                                 <td class="col-9">{{ $penjualan->penjualan_id }}</td>
@@ -59,7 +85,7 @@
                             <tr>
                                 <th class="text-right">Tanggal Penjualan:</th>
                                 <td class="col-9">{{ $penjualan->penjualan_tanggal }}</td>
-                            </tr>
+                            </tr> --}}
                             {{-- <tr>
                                 <th class="text-right">Total Harga:</th>
                                 <td class="col-9">
@@ -82,7 +108,7 @@
                                     Rp {{ number_format($total_pendapatan, 2) }}
                                 </td>
                             </tr> --}}
-                        </tbody>
+                        {{-- </tbody> --}}
                     </table>                    
                 </div>
 

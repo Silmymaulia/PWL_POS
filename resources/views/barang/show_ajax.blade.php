@@ -47,11 +47,18 @@
                     <th class="text-right col-3">Harga Jual:</th>
                     <td class="col-9">{{ $barang->harga_jual }}</td>
                 </tr>
+                <tr>
+                    <th class="text-right col-3">Gambar:</th>
+                    <td class="col-9">
+                        <img src="{{ asset ($barang->image) }}" alt="Gambar {{ $barang->barang_nama }}" width="150" height="150">
+                    </td>
+                </tr>
+                
             </table>
         </div>
         <div class="modal-footer">
             <button type="button" data-dismiss="modal" class="btn btn-warning">Tutup</button>
-        </div>
+        </div>  
     </div>
 </div>
 @endempty
